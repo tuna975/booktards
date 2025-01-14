@@ -15,8 +15,8 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
-import { getFirestore, collection, addDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const FirebaseContext = createContext(null);
 
@@ -56,8 +56,6 @@ export const FirebaseProvider = (props) => {
 
   const signinWithGoogle = () => signInWithPopup(firebaseAuth, googleProvider);
 
-  console.log(user);
-
   const handleCreateNewListing = async (name, isbn, price, cover) => {
     const imageRef = ref(storage, `uploads/images/${Date.now()}-${cover.name}`);
     const uploadResult = await uploadBytes(imageRef, cover);
@@ -73,6 +71,14 @@ export const FirebaseProvider = (props) => {
     });
   };
 
+  const listAllBooks = () => {
+    return getDocs(collection(firestore, "books"));
+  };
+
+  const getImageURL = (path) => {
+    return getDownloadURL(ref(storage, path));
+  };
+
   const isLoggedin = user ? true : false;
 
   return (
@@ -83,6 +89,8 @@ export const FirebaseProvider = (props) => {
         signinUserWithEmailAndPassword,
         handleCreateNewListing,
         isLoggedin,
+        listAllBooks,
+        getImageURL,
       }}
     >
       {props.children}
