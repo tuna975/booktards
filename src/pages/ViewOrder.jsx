@@ -4,17 +4,27 @@ import BookCard from "../components/Card";
 
 const OrdersPage = () => {
   const firebase = useFirebase();
+  console.log(firebase);
   const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true); // Added loading state
+  useEffect(() => {
+    console.log("IsLoggedIn in OrdersPage:", firebase.isLoggedIn);
+  }, [firebase.isLoggedIn]);
 
   useEffect(() => {
-    if (firebase.isLoggedIn)
+    if (firebase.isLoggedin) {
       firebase
         .fetchMyBooks(firebase.user.uid)
-        ?.then((books) => setBooks(books.docs));
-  }, [firebase]);
+        .then((books) => setBooks(books.docs))
+        .finally(() => setLoading(false)); // Ensure loading stops
+    } else {
+      setLoading(false); // Loading stops if user is not logged in
+    }
+  }, [firebase.isLoggedin]);
 
-  console.log(books);
-  if (!firebase.isLoggedIn) return <h1>PFuckh</h1>;
+  if (loading) return <h1>Loading...</h1>;
+
+  if (!firebase.isLoggedin) return <h1>Please log in to view your orders.</h1>;
 
   return (
     <div>

@@ -11,7 +11,7 @@ const HomePage = () => {
   useEffect(() => {
     firebase.listAllBooks().then((books) => setBooks(books.docs));
   }, []);
-
+  console.log(firebase.isLoggedIn);
   return (
     <div className="container mt-5">
       <CardGroup>

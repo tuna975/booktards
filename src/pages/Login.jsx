@@ -13,7 +13,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (firebase.isLoggedin) {
-      navigate("/");
+      navigate("/home");
     }
   }, [firebase, navigate]);
 
