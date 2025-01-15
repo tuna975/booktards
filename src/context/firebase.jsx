@@ -109,6 +109,12 @@ export const FirebaseProvider = (props) => {
     return result;
   };
 
+  const getOrders = async (bookId) => {
+    const collectionRef = collection(firestore, "books", bookId, "orders");
+    const result = await getDocs(collectionRef);
+    return result;
+  };
+
   const isLoggedin = user ? true : false;
 
   return (
@@ -125,6 +131,7 @@ export const FirebaseProvider = (props) => {
         placeOrder,
         fetchMyBooks,
         user,
+        getOrders,
       }}
     >
       {props.children}
